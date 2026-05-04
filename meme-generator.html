@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Meme Comment Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=DM+Sans:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="theme-dark">
+    <div class="page-shell">
+      <div class="background-orb orb-one"></div>
+      <div class="background-orb orb-two"></div>
+
+      <main class="app-shell">
+        <header class="hero">
+          <div class="hero-copy">
+            <h1>AI Meme Comment Generator</h1>
+            <p class="hero-text">
+              Drop in a meme, set the mood, and generate sharp comment-section style reactions in seconds.
+            </p>
+          </div>
+
+          <div class="hero-actions">
+            <button id="themeToggle" class="secondary-btn" type="button" aria-label="Toggle theme">
+              Toggle Theme
+            </button>
+          </div>
+        </header>
+
+        <section class="dashboard">
+          <div class="panel input-panel">
+            <div class="panel-heading">
+              <h2>Input</h2>
+              <p>Provide an image and optional meme context for better captions.</p>
+            </div>
+
+            <div class="field-group">
+              <label for="apiKey">OpenRouter API Key</label>
+              <input
+                id="apiKey"
+                type="password"
+                placeholder="Enter your OpenRouter key"
+                autocomplete="off"
+              />
+              <label class="remember-row">
+                <input id="rememberKey" type="checkbox" />
+                Remember key on this device
+              </label>
+            </div>
+
+            <div class="grid-two">
+              <div class="field-group">
+                <label for="imageInput">Upload Meme Image</label>
+                <div class="file-upload">
+                  <input id="imageInput" class="file-input-native" type="file" accept="image/*" />
+                  <label for="imageInput" class="file-upload-btn">Choose File</label>
+                  <span id="fileNameDisplay" class="file-name-display">No file chosen</span>
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label for="imageUrl">Or Paste Image URL</label>
+                <input
+                  id="imageUrl"
+                  type="text"
+                  placeholder="https://example.com/meme.jpg"
+                />
+              </div>
+            </div>
+
+            <div class="grid-two">
+              <div class="field-group">
+                <label for="captionStyle">Caption Style</label>
+                <select id="captionStyle">
+                  <option value="witty">Witty</option>
+                  <option value="sarcastic">Sarcastic</option>
+                  <option value="dark">Dark</option>
+                  <option value="wholesome">Wholesome</option>
+                </select>
+              </div>
+
+              <div class="field-group">
+                <label for="emojiMode">Emoji Level</label>
+                <select id="emojiMode">
+                  <option value="none">No Emoji</option>
+                  <option value="light">Light Emoji</option>
+                  <option value="extra">Extra Emoji</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid-two">
+              <div class="field-group">
+                <label for="qualityMode">Caption Quality</label>
+                <select id="qualityMode">
+                  <option value="short">Short</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="edgy">Edgy</option>
+                </select>
+              </div>
+
+              <div class="field-group">
+                <label for="languageMode">Language Output</label>
+                <select id="languageMode">
+                  <option value="both" selected>Both</option>
+                  <option value="english">English only</option>
+                  <option value="hinglish">Hinglish only</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label for="memeContext">Meme Context</label>
+              <textarea
+                id="memeContext"
+                placeholder="Example: Me acting calm in class after getting zero sleep and still pretending I studied."
+              ></textarea>
+            </div>
+
+            <div class="field-group">
+              <label for="userTopic">Optional Topic Hint</label>
+              <input
+                id="userTopic"
+                type="text"
+                placeholder="office life, exams, friendship, coding, Monday mood..."
+              />
+            </div>
+
+            <div class="action-row">
+              <button id="generateBtn" class="primary-btn" type="button">Generate Captions</button>
+              <button id="regenerateBtn" class="secondary-btn" type="button">Regenerate</button>
+            </div>
+
+            <div id="loadingState" class="loading-state hidden" aria-live="polite">
+              <span class="loader"></span>
+              <span>Generating meme captions...</span>
+            </div>
+
+            <div id="errorBox" class="error-box hidden" role="alert"></div>
+          </div>
+
+          <div class="panel preview-panel">
+            <div class="panel-heading">
+              <h2>Preview</h2>
+              <p>Use either upload or URL. Text-only models use your context to guide the joke.</p>
+            </div>
+
+            <div id="previewFrame" class="preview-frame">
+              <img id="previewImage" class="hidden" alt="Selected meme preview" />
+              <div id="previewPlaceholder" class="preview-placeholder">
+                <h3>Meme preview appears here</h3>
+                <p>Upload a file or paste a direct image URL to start.</p>
+              </div>
+            </div>
+
+            <div class="preview-meta">
+              <p id="imageStatus">No image selected yet.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel output-panel">
+          <div class="output-header">
+            <div>
+              <p class="eyebrow">Results</p>
+              <h2>Generated Captions</h2>
+              <p>Copy one-by-one or download all captions as a text file.</p>
+            </div>
+
+            <div class="output-actions">
+              <button id="copyAllEnglishBtn" class="secondary-btn" type="button">Copy All English</button>
+              <button id="copyAllHinglishBtn" class="secondary-btn" type="button">Copy All Hinglish</button>
+              <button id="downloadBtn" class="secondary-btn" type="button">Download Captions</button>
+            </div>
+          </div>
+
+          <div id="captionGrid" class="caption-grid">
+            <article class="empty-card">
+              <h3>Your caption ideas will show up here</h3>
+              <p>
+                Add an image, enter a little context, and click
+                <strong>Generate Captions</strong>.
+              </p>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="toast" class="toast hidden" aria-live="assertive"></div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
